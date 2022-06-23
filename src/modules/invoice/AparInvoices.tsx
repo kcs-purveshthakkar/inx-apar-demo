@@ -3,21 +3,24 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { AgGridReact } from 'ag-grid-react';
 import { NavLink, Outlet } from "react-router-dom";
 import DatePicker from "react-datepicker";
+import addDays from "date-fns/addDays";
 import "react-datepicker/dist/react-datepicker.css";
 import * as invoiceService from "../../services/InvoiceService";
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import Header from '../layout/Header';
 import { invoiceListPaginationPageSize } from '../../constants/common';
+import Loader from '../../components/loader';
 
 const AparInvoices = () => {
 
     const gridRef = useRef<any>();
+    const [showLoader, setShowLoader] = useState(false);
     const [gridApi, setGridApi] = useState<any>(null);
     const [invoicesData, setInvoicesData] = useState<any>([]);
     const [invoicesList, setInvoicesList] = useState<any>([]);
-    const [fromDateFilter, setFromDateFilter] = useState(new Date());
-    const [toDateFilter, setToDateFilter] = useState(new Date());
+    const [fromDateFilter, setFromDateFilter] = useState(addDays(new Date(), -31));
+    const [toDateFilter, setToDateFilter] = useState(addDays(new Date(), -1));
 
     useEffect(() => {
         getApiData();
@@ -28,9 +31,11 @@ const AparInvoices = () => {
     });
 
     const getApiData = async () => {
+        setShowLoader(true);
         const getInvoicesData = await invoiceService.getInvoices();
         setInvoicesData(getInvoicesData);
         setInvoicesList(getInvoicesData);
+        setShowLoader(false);
     };
 
     const getTableData = async () => {
@@ -118,16 +123,20 @@ const AparInvoices = () => {
         handleFilterSubmit(date);
     };
 
-    const handleFilterSubmit = async (toDate: any) => {
+    const handleFilterSubmit = async (toDate: Date) => {
         const convertFromDateFormat = fromDateFilter?.toLocaleDateString();
         const convertToDateFormat = toDate?.toLocaleDateString();
-        if (fromDateFilter !== undefined) {
+        if ((fromDateFilter !== undefined) || fromDateFilter !== null) {
             var resultProductData = invoicesData.filter((a: any) => {
                 var invoiceDate = new Date(a.invoice_date);
                 const convertInvoiceDate = invoiceDate.toLocaleDateString();
                 return (convertInvoiceDate >= convertFromDateFormat && convertInvoiceDate <= convertToDateFormat);
             });
             setInvoicesList(resultProductData);
+        }
+        console.log('1111=', fromDateFilter, toDate);
+        if ((fromDateFilter === undefined) && (toDate === undefined) || (fromDateFilter === null) && (toDate === null)) {
+            clearFilter();
         }
     };
 
@@ -138,6 +147,7 @@ const AparInvoices = () => {
     return (
         <>
             <div className="m-grid__item m-grid__item--fluid m-wrapper">
+                {<Loader isLoading={showLoader} />}
                 <div>
                     <h2 style={{ textAlign: 'center', marginTop: '90px' }}>Invoices</h2>
                     <div style={{
@@ -151,7 +161,7 @@ const AparInvoices = () => {
                                 className={"form-control m-input"}
                                 placeholderText="MM/DD/YYYY"
                                 onChange={(date) => { handleFromDateChange(date); }}
-                            // minDate={new Date()}
+                                maxDate={addDays(new Date(), -1)}
                             />
                         </div>
                         <div className="col-lg-2 col-md-4 col-sm-12 mb-4">
@@ -162,6 +172,7 @@ const AparInvoices = () => {
                                 onChange={(date) => {
                                     handleToDateChange(date);
                                 }}
+                                maxDate={addDays(new Date(), -1)}
                             />
                         </div>
                         <Button onClick={clearFilter} className="mr-2">
@@ -185,6 +196,7 @@ const AparInvoices = () => {
                                 columnDefs={columns}
                                 pagination={true}
                                 paginationPageSize={invoiceListPaginationPageSize}
+                                cacheBlockSize={invoiceListPaginationPageSize}
                                 defaultColDef={defaultColDef}
                                 rowSelection={'multiple'}
                                 groupSelectsChildren={true}

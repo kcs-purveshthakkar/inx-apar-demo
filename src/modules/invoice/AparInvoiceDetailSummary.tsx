@@ -2,10 +2,12 @@ import React, { useState, useCallback, useMemo, useRef, useEffect, Fragment } fr
 import { Link, useParams, NavLink } from "react-router-dom";
 import BaseLayout from '../layout/BaseLayout';
 import * as invoiceService from "../../services/InvoiceService";
+import Loader from '../../components/loader';
 
 
 const AparInvoiceDetailSummary = () => {
     const { id } = useParams();
+    const [showLoader, setShowLoader] = useState(false);
     const [invoicesData, setInvoicesData] = useState<any>([]);
 
 
@@ -15,6 +17,7 @@ const AparInvoiceDetailSummary = () => {
     }, []);
 
     const getApiData = async () => {
+        setShowLoader(true);
         const getInvoicesData = await invoiceService.getInvoices();
         let filterInvoiceById: any[] = [];
         getInvoicesData.forEach((invoiceData: any) => {
@@ -23,14 +26,14 @@ const AparInvoiceDetailSummary = () => {
             }
         });
         setInvoicesData(filterInvoiceById);
+        setShowLoader(false);
     };
 
 
     return (
         <>
-            {console.log('invoicesData==', invoicesData)}
             <div className="m-grid__item m-grid__item--fluid m-wrapper" style={{ backgroundColor: '#F5F5F5' }}>
-
+                {<Loader isLoading={showLoader} />}
                 <div className="m-container px-4 px-sm-0">
                     <div className="d-flex align-items-center pt-5">
                         <div className="mr-auto">
