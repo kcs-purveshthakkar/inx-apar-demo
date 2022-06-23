@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 export function getInvoices() {
-    let url = `http://localhost:3005/invoices`;
+    let url = `https://apar-json-server.herokuapp.com/invoices`;
     return axios
         .get(url)
         .then((result) => {

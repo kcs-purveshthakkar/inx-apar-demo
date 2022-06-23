@@ -8,7 +8,9 @@ import AparInvoiceDetailSummary from '../invoice/AparInvoiceDetailSummary';
 import AparInvoices from '../invoice/AparInvoices';
 import Header from './Header';
 
-
+type Route = {
+    element: JSX.Element
+}
 const BaseLayout = () => {
 
     return (
@@ -21,17 +23,23 @@ const BaseLayout = () => {
                     <Header />
                     <AparInvoices />
                     <div className='m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body'>
-                        {/*   <Routes>
-                            {routes.map((route, idx) => {
+                        {/* <Routes> */}
+                        {/* {routes.map((route, idx) => {
+                                console.log("111", route.element)
                                 return route.element ? (
                                     <Route
                                         key={idx}
                                         path={route.path}
                                         element={<route.element />}
-                                    />
+                                    >
+                                    </Route>
                                 ) : undefined;
-                            })}
-                        </Routes> */}
+                            })} */}
+                        {/* <Route path="invoice">
+                                <Route path=":id" element={<AparInvoiceDetailSummary />} />
+                            </Route> */}
+
+                        {/* </Routes> */}
                     </div>
                     {/* <Footer /> */}
                 </div>
