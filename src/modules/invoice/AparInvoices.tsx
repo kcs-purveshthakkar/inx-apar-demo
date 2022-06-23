@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect, Fragment } from 'react';
 import { Modal, Button, Form } from "react-bootstrap";
 import { AgGridReact } from 'ag-grid-react';
-import { NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import * as invoiceService from "../../services/InvoiceService";
@@ -120,7 +120,7 @@ const AparInvoices = () => {
 
     const handleFilterSubmit = async (toDate: any) => {
         const convertFromDateFormat = fromDateFilter?.toLocaleDateString();
-        const convertToDateFormat = toDate.toLocaleDateString();
+        const convertToDateFormat = toDate?.toLocaleDateString();
         if (fromDateFilter !== undefined) {
             var resultProductData = invoicesData.filter((a: any) => {
                 var invoiceDate = new Date(a.invoice_date);
@@ -198,6 +198,7 @@ const AparInvoices = () => {
                     </div>
                 </div>
             </div>
+            {/* <Outlet /> */}
         </>
     );
 }
