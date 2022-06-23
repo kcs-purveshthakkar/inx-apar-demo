@@ -119,7 +119,7 @@ const AparInvoices = () => {
     };
 
     const handleFilterSubmit = async (toDate: any) => {
-        const convertFromDateFormat = fromDateFilter.toLocaleDateString();
+        const convertFromDateFormat = fromDateFilter?.toLocaleDateString();
         const convertToDateFormat = toDate.toLocaleDateString();
         if (fromDateFilter !== undefined) {
             var resultProductData = invoicesData.filter((a: any) => {
