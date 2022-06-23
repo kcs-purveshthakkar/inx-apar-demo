@@ -105,54 +105,28 @@ const AparInvoices = () => {
         };
     }, []);
 
-    const filterInvoiceTotalAmount = () => {
-        let filterInvoiceTotalAmountArr: any[] = [];
-        invoicesList.forEach((filterDataGrid: any) => {
-            if (filterDataGrid.invoice_total_amount === "5486") {
-                filterInvoiceTotalAmountArr.push(filterDataGrid);
-            }
-        });
-        setInvoicesData(filterInvoiceTotalAmountArr);
-    };
-
-    const filterInvoiceMode = () => {
-        let filterInvoiceModeArr: any[] = [];
-        invoicesList.forEach((filterDataGrid: any) => {
-            if (filterDataGrid.Mode === "LTL") {
-                filterInvoiceModeArr.push(filterDataGrid);
-            }
-        });
-        setInvoicesData(filterInvoiceModeArr);
-    };
-
     const clearFilter = () => {
         getApiData();
     };
 
     const handleFromDateChange = (date: any) => {
         setFromDateFilter(date);
-        // clearFilter();
     };
 
     const handleToDateChange = async (date: any) => {
-        // console.log('date=', date);
         setToDateFilter(date);
-        // clearFilter();
         handleFilterSubmit(date);
     };
 
     const handleFilterSubmit = async (toDate: any) => {
         const convertFromDateFormat = fromDateFilter.toLocaleDateString();
         const convertToDateFormat = toDate.toLocaleDateString();
-        // const parseFromDate = Date.parse(convertFromDateFormat);
-        // const parseToDate = Date.parse(convertToDateFormat);
         if (fromDateFilter !== undefined) {
             var resultProductData = invoicesData.filter((a: any) => {
                 var invoiceDate = new Date(a.invoice_date);
                 const convertInvoiceDate = invoiceDate.toLocaleDateString();
                 return (convertInvoiceDate >= convertFromDateFormat && convertInvoiceDate <= convertToDateFormat);
             });
-            console.log('resultProductData==', resultProductData)
             setInvoicesList(resultProductData);
         }
     };
@@ -166,24 +140,12 @@ const AparInvoices = () => {
             <div className="m-grid__item m-grid__item--fluid m-wrapper">
                 <div>
                     <h2 style={{ textAlign: 'center', marginTop: '90px' }}>Invoices</h2>
-                    {/*  <form onSubmit={handleOnSubmit}>
-                <label htmlFor="username" style={{ marginRight: "10px" }}>Name: </label>
-                <input required name="username" type="text" style={{ marginRight: "15px" }} onChange={handleOnChange} value={name} autoComplete="off" />
-                <Button variant="secondary" type="submit">Add User</Button>
-            </form> */}
-                    {/* <Button onClick={filterInvoiceTotalAmount}>Filter Invoice Total Amount = 5486</Button>
-                        <Button onClick={filterInvoiceMode} style={{ marginLeft: '10px' }}>Filter Mode = LTL</Button> */}
                     <div style={{
                         justifyContent: "end",
                         display: "flex",
                         alignItems: "baseline"
                     }}>
                         <div className="col-lg-2 col-md-4 col-sm-12 mb-4 mt-3">
-                            {/* <input
-                                type="text"
-                                placeholder="From Date"
-                                className={"form-control m-input"}
-                            /> */}
                             <DatePicker
                                 selected={fromDateFilter}
                                 className={"form-control m-input"}
@@ -193,11 +155,6 @@ const AparInvoices = () => {
                             />
                         </div>
                         <div className="col-lg-2 col-md-4 col-sm-12 mb-4">
-                            {/* <input
-                                type="text"
-                                placeholder="To Date"
-                                className={"form-control m-input"}
-                            /> */}
                             <DatePicker
                                 selected={toDateFilter}
                                 className={"form-control m-input"}
