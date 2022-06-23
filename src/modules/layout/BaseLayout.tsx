@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
     Routes,
     Route,
@@ -7,6 +7,7 @@ import routes from '../../routes';
 import AparInvoiceDetailSummary from '../invoice/AparInvoiceDetailSummary';
 import AparInvoices from '../invoice/AparInvoices';
 import Header from './Header';
+
 
 const BaseLayout = () => {
 
@@ -20,15 +21,13 @@ const BaseLayout = () => {
                     <Header />
                     <AparInvoices />
                     <div className='m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body'>
-                        {/*  <Routes>
+                        {/*   <Routes>
                             {routes.map((route, idx) => {
                                 return route.element ? (
                                     <Route
                                         key={idx}
                                         path={route.path}
-                                        render={(props: any) => {
-                                            return <route.element {...props} />;
-                                        }}
+                                        element={<route.element />}
                                     />
                                 ) : undefined;
                             })}

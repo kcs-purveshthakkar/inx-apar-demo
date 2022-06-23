@@ -2,16 +2,22 @@ import React, { useState, useCallback, useMemo, useRef, useEffect, Fragment } fr
 import { Modal, Button, Form } from "react-bootstrap";
 import { AgGridReact } from 'ag-grid-react';
 import { NavLink } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import * as invoiceService from "../../services/InvoiceService";
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import Header from '../layout/Header';
+import { invoiceListPaginationPageSize } from '../../constants/common';
 
 const AparInvoices = () => {
 
     const gridRef = useRef<any>();
     const [gridApi, setGridApi] = useState<any>(null);
     const [invoicesData, setInvoicesData] = useState<any>([]);
+    const [invoicesList, setInvoicesList] = useState<any>([]);
+    const [fromDateFilter, setFromDateFilter] = useState(new Date());
+    const [toDateFilter, setToDateFilter] = useState(new Date());
 
     useEffect(() => {
         getApiData();
@@ -24,14 +30,15 @@ const AparInvoices = () => {
     const getApiData = async () => {
         const getInvoicesData = await invoiceService.getInvoices();
         setInvoicesData(getInvoicesData);
+        setInvoicesList(getInvoicesData);
     };
 
     const getTableData = async () => {
         if (gridApi) {
             const dataSource = {
                 getRows: async (params: any) => {
-                    if (invoicesData.length) {
-                        params.successCallback(invoicesData, invoicesData.length);
+                    if (invoicesList.length) {
+                        params.successCallback(invoicesList, invoicesList.length);
                     }
                 }
             }
@@ -100,7 +107,7 @@ const AparInvoices = () => {
 
     const filterInvoiceTotalAmount = () => {
         let filterInvoiceTotalAmountArr: any[] = [];
-        invoicesData.forEach((filterDataGrid: any) => {
+        invoicesList.forEach((filterDataGrid: any) => {
             if (filterDataGrid.invoice_total_amount === "5486") {
                 filterInvoiceTotalAmountArr.push(filterDataGrid);
             }
@@ -110,7 +117,7 @@ const AparInvoices = () => {
 
     const filterInvoiceMode = () => {
         let filterInvoiceModeArr: any[] = [];
-        invoicesData.forEach((filterDataGrid: any) => {
+        invoicesList.forEach((filterDataGrid: any) => {
             if (filterDataGrid.Mode === "LTL") {
                 filterInvoiceModeArr.push(filterDataGrid);
             }
@@ -122,13 +129,40 @@ const AparInvoices = () => {
         getApiData();
     };
 
+    const handleFromDateChange = (date: any) => {
+        setFromDateFilter(date);
+        // clearFilter();
+    };
+
+    const handleToDateChange = async (date: any) => {
+        // console.log('date=', date);
+        setToDateFilter(date);
+        // clearFilter();
+        handleFilterSubmit(date);
+    };
+
+    const handleFilterSubmit = async (toDate: any) => {
+        const convertFromDateFormat = fromDateFilter.toLocaleDateString();
+        const convertToDateFormat = toDate.toLocaleDateString();
+        // const parseFromDate = Date.parse(convertFromDateFormat);
+        // const parseToDate = Date.parse(convertToDateFormat);
+        if (fromDateFilter !== undefined) {
+            var resultProductData = invoicesData.filter((a: any) => {
+                var invoiceDate = new Date(a.invoice_date);
+                const convertInvoiceDate = invoiceDate.toLocaleDateString();
+                return (convertInvoiceDate >= convertFromDateFormat && convertInvoiceDate <= convertToDateFormat);
+            });
+            console.log('resultProductData==', resultProductData)
+            setInvoicesList(resultProductData);
+        }
+    };
+
     /*  const onGridReady = (params: any) => {
          setGridApi(params.api);
      }; */
 
     return (
         <>
-            <Header />
             <div className="m-grid__item m-grid__item--fluid m-wrapper">
                 <div>
                     <h2 style={{ textAlign: 'center', marginTop: '90px' }}>Invoices</h2>
@@ -137,16 +171,49 @@ const AparInvoices = () => {
                 <input required name="username" type="text" style={{ marginRight: "15px" }} onChange={handleOnChange} value={name} autoComplete="off" />
                 <Button variant="secondary" type="submit">Add User</Button>
             </form> */}
+                    {/* <Button onClick={filterInvoiceTotalAmount}>Filter Invoice Total Amount = 5486</Button>
+                        <Button onClick={filterInvoiceMode} style={{ marginLeft: '10px' }}>Filter Mode = LTL</Button> */}
+                    <div style={{
+                        justifyContent: "end",
+                        display: "flex",
+                        alignItems: "baseline"
+                    }}>
+                        <div className="col-lg-2 col-md-4 col-sm-12 mb-4 mt-3">
+                            {/* <input
+                                type="text"
+                                placeholder="From Date"
+                                className={"form-control m-input"}
+                            /> */}
+                            <DatePicker
+                                selected={fromDateFilter}
+                                className={"form-control m-input"}
+                                placeholderText="MM/DD/YYYY"
+                                onChange={(date) => { handleFromDateChange(date); }}
+                            // minDate={new Date()}
+                            />
+                        </div>
+                        <div className="col-lg-2 col-md-4 col-sm-12 mb-4">
+                            {/* <input
+                                type="text"
+                                placeholder="To Date"
+                                className={"form-control m-input"}
+                            /> */}
+                            <DatePicker
+                                selected={toDateFilter}
+                                className={"form-control m-input"}
+                                placeholderText="MM/DD/YYYY"
+                                onChange={(date) => {
+                                    handleToDateChange(date);
+                                }}
+                            />
+                        </div>
+                        <Button onClick={clearFilter} className="mr-2">
+                            Clear Filter
+                        </Button >
+                    </div>
                 </div>
-                {/* <div style={{ marginTop: '20px', marginBottom: '5px', marginLeft: '10px' }}>
-                <Button onClick={filterInvoiceTotalAmount}>Filter Invoice Total Amount = 5486</Button>
-                <Button onClick={filterInvoiceMode} style={{ marginLeft: '10px' }}>Filter Mode = LTL</Button>
-                <Button onClick={clearFilter} style={{ marginLeft: '10px' }}>
-                    Clear Filter
-                </Button >
-            </div> */}
                 <br />
-                <div className="custom__table my-3">
+                <div className="custom__table mb-3">
                     <div style={{ width: "100%", height: "100%" }}>
                         <div
                             style={{
@@ -157,9 +224,10 @@ const AparInvoices = () => {
                         >
                             <AgGridReact
                                 ref={gridRef}
-                                rowData={invoicesData}
+                                rowData={invoicesList}
                                 columnDefs={columns}
                                 pagination={true}
+                                paginationPageSize={invoiceListPaginationPageSize}
                                 defaultColDef={defaultColDef}
                                 rowSelection={'multiple'}
                                 groupSelectsChildren={true}

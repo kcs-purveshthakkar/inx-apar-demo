@@ -1,4 +1,6 @@
+import AparInvoiceDetailSummary from "./modules/invoice/AparInvoiceDetailSummary";
 import AparInvoices from "./modules/invoice/AparInvoices";
+
 
 
 const routes = [
@@ -8,7 +10,12 @@ const routes = [
         name: "Apar Invoices",
         element: AparInvoices,
     },
-
+    {
+        path: "/invoice-detail/:id",
+        icon: "flaticon-list-2",
+        name: "Invoice Detail",
+        element: AparInvoiceDetailSummary,
+    }
 ];
 
 export default routes;

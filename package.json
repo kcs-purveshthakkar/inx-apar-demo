@@ -19,6 +19,7 @@
     "node-sass": "^7.0.1",
     "react": "^18.1.0",
     "react-bootstrap": "^2.4.0",
+    "react-datepicker": "^4.8.0",
     "react-dom": "^18.1.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
@@ -49,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-datepicker": "^4.4.2"
   }
 }
