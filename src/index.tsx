@@ -8,7 +8,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const client = new ApolloClient({
-  uri: 'https://api.spacex.land/graphql/',
+  uri: 'https://sk8lqv9kej.execute-api.us-east-1.amazonaws.com/beta/graphql',
   cache: new InMemoryCache()
 })
 

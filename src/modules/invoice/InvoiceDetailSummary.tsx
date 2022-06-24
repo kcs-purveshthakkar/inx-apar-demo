@@ -1,16 +1,28 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect, Fragment } from 'react';
 import { Link, useParams, NavLink } from "react-router-dom";
-import BaseLayout from '../layout/BaseLayout';
+import BaseLayout from '../shared/layout/BaseLayout';
 import * as invoiceService from "../../services/InvoiceService";
 import Loader from '../../components/loader';
+import CustomBreadCrumb from "../shared/breadcrumb/CustomBreadCrumb";
 
 
 const AparInvoiceDetailSummary = () => {
     const { id } = useParams();
+
+    const invoiceDetailBreadCrumbData = [
+        {
+            title: "Invoice List",
+            link: "/",
+            classData: "m-nav__link-text__m",
+        },
+        {
+            title: "Invoice Detail",
+            link: "",
+        },
+    ];
+
     const [showLoader, setShowLoader] = useState(false);
     const [invoicesData, setInvoicesData] = useState<any>([]);
-
-
 
     useEffect(() => {
         getApiData();
@@ -37,15 +49,15 @@ const AparInvoiceDetailSummary = () => {
                 <div className="m-container px-4 px-sm-0">
                     <div className="d-flex align-items-center pt-5">
                         <div className="mr-auto">
-                            <ul className="m-subheader__breadcrumbs m-nav m-nav--inline">
-                                <li className="m-nav__item m-nav__item--home">
-                                    <NavLink to="/" className="m-nav__link m-nav__link--icon">
-                                        <i className="m-nav__link-icon la la-home"></i>
-                                    </NavLink>
-                                </li>
-                            </ul>
+                            <CustomBreadCrumb breadCrumbItems={invoiceDetailBreadCrumbData} />
                             <h3 className="m-subheader__title mb-0">
-                                Invoice Detail
+                                <Link
+                                    to="/"
+                                    className="font-weight-bold text-secondary"
+                                >
+                                    <i className="fa fa-arrow-left mr-2 mr-md-4"></i>
+                                </Link>
+                                Invoice Detail{" "}
                             </h3>
                         </div>
                     </div>

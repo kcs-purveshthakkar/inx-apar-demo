@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { gql } from '@apollo/client';
 
 
 export function getInvoices() {
@@ -14,3 +15,25 @@ export function getInvoices() {
             return error.response.data;
         });
 }
+
+
+/**
+ * Invoice GraphQL Service
+ */
+export const invoiceService = {
+
+    getInvoiceList: gql`
+    query InvoiceList {
+        invoiceList {
+            id
+            invoiceNumber
+            invoiceDate
+            invoiceAmount
+            createdAt
+            updatedAt
+      }
+    }
+    `,
+
+}
+
