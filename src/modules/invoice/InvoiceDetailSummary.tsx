@@ -1,12 +1,85 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect, Fragment } from 'react';
 import { Link, useParams, NavLink } from "react-router-dom";
+import { useQuery, useMutation, gql } from '@apollo/client';
 import BaseLayout from '../shared/layout/BaseLayout';
-import * as invoiceService from "../../services/InvoiceService";
+// import * as invoiceService from "../../services/InvoiceService";
+import { invoiceService } from "../../services/InvoiceService";
 import Loader from '../../components/loader';
 import CustomBreadCrumb from "../shared/breadcrumb/CustomBreadCrumb";
 
 
+interface InvoiceByIdData {
+    id: number;
+    scac: string;
+    po_number: string;
+    invoice_date: string;
+    invoice_number: string;
+    reference_number: string;
+    invoice_total_amount: string;
+    freight_rate: string;
+    pallet_jack: string;
+    inside_pu: string;
+    lift_gate_pu: string;
+    holiday_pu: string;
+    weekend_pu: string;
+    non_business_hour_pu: string;
+    sorting_segregation: string;
+    marking_tagging: string;
+    other_accessorials: string;
+    residential_pu: string;
+    trade_show_pu: string;
+    appointment_required: string;
+    fuel: string;
+    detention: string;
+    toll_fee: string;
+    layover: string;
+    stop_off: string;
+    driver_assist: string;
+    weight_increase: string;
+    ams: string;
+    bol_fee: string;
+    bonded_fee: string;
+    cancellation_charge: string;
+    chassis_charges: string;
+    congestion_surcharge: string;
+    customs_clearance_fee: string;
+    delivery_order_fee: string;
+    demurrage: string;
+    destination_fees: string;
+    diversion_charges: string;
+    drop_and_hook_fee: string;
+    handling_fee: string;
+    hazardous: string;
+    pick_up_charge: string;
+    redelivery_fee: string;
+    reefer_surcharge: string;
+    terminal_handling_charge: string;
+    wait_time_fee: string;
+    duty_hmf_mpf_fee: string;
+    scale_ticket: string;
+    gri: string;
+    peak_season_surcharge: string;
+    delivery_surcharge: string;
+    invoice_due_date: string;
+    master_bol: string;
+    bol_number: string;
+    container_number: string;
+    awb_number: string;
+    mode: string;
+    weight: string;
+    weight_uom: string;
+    pallet_count: string;
+    l7_details: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface InvoiceByIdResult {
+    invoiceById: Array<InvoiceByIdData>
+}
+
 const AparInvoiceDetailSummary = () => {
+
     const { id } = useParams();
 
     const invoiceDetailBreadCrumbData = [
@@ -24,23 +97,32 @@ const AparInvoiceDetailSummary = () => {
     const [showLoader, setShowLoader] = useState(false);
     const [invoicesData, setInvoicesData] = useState<any>([]);
 
+    const requestPayloadVariables = () => {
+        return {
+            variables: { invoiceByIdId: Number(id) },
+        }
+    };
+
+    const { loading, error, data } = useQuery<InvoiceByIdResult>(invoiceService.getInvoiceById, requestPayloadVariables());
+
     useEffect(() => {
         getApiData();
-    }, []);
+    }, [data]);
 
     const getApiData = async () => {
         setShowLoader(true);
-        const getInvoicesData = await invoiceService.getInvoices();
-        let filterInvoiceById: any[] = [];
-        getInvoicesData.forEach((invoiceData: any) => {
+        // const getInvoicesData = await invoiceService.getInvoices();
+        // let filterInvoiceById: any[] = [];
+       /*  getInvoicesData.forEach((invoiceData: any) => {
             if (invoiceData.invoice_number == id) {
                 filterInvoiceById.push(invoiceData);
             }
-        });
-        setInvoicesData(filterInvoiceById);
-        setShowLoader(false);
+        }); */
+        if (data) {
+            setInvoicesData(data.invoiceById);
+            setShowLoader(false);
+        }
     };
-
 
     return (
         <>
@@ -66,7 +148,7 @@ const AparInvoiceDetailSummary = () => {
                     <div className="m-container  my-sm-5 px-4 px-sm-0">
                         <div className="m-portlet m-portlet--tab border-radius-25">
                             <div className="m-portlet__body font-weight-bold">
-                                Invoice Number: {invoicesData[0]?.invoice_number}
+                                Invoice Number: {invoicesData.invoice_number}
                             </div>
                         </div>
                         <div className="row">
@@ -80,7 +162,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Batch Name
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.batch_name}
+                                                        {invoicesData.batch_name}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -88,7 +170,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Source
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.source}
+                                                        {invoicesData.source}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -96,7 +178,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Ingested Date
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.created_at}
+                                                        {invoicesData.createdAt}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -104,7 +186,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Excel Version
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.excel_version}
+                                                        {invoicesData.excel_version}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -112,7 +194,7 @@ const AparInvoiceDetailSummary = () => {
                                                         SCAC
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.SCAC}
+                                                        {invoicesData.scac}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -120,7 +202,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Mode
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.Mode}
+                                                        {invoicesData.mode}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -128,7 +210,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Pro Number
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.pro_number}
+                                                        {invoicesData.pro_number}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -136,7 +218,7 @@ const AparInvoiceDetailSummary = () => {
                                                         PO Number
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.po_number}
+                                                        {invoicesData.po_number}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -144,7 +226,7 @@ const AparInvoiceDetailSummary = () => {
                                                         BOL Number
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.bol_number}
+                                                        {invoicesData.bol_number}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -152,7 +234,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Master BOL
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.master_bol}
+                                                        {invoicesData.master_bol}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -168,7 +250,7 @@ const AparInvoiceDetailSummary = () => {
                                                         AWB Number
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.awb_number}
+                                                        {invoicesData.awb_number}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -184,7 +266,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Invoice Date
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.invoice_date}
+                                                        {invoicesData.invoice_date}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -192,15 +274,15 @@ const AparInvoiceDetailSummary = () => {
                                                         Invoice Total Amount
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.invoice_total_amount}
+                                                        {invoicesData.invoice_total_amount}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
                                                     <label className="d-block font-weight-medium text-labelmuted">
-                                                        Base Freight Rate
+                                                        Freight Rate
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.base_freight_rate}
+                                                        {invoicesData[0]?.freight_rate}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -232,7 +314,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Weight
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.weight}
+                                                        {invoicesData.weight}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -240,7 +322,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Weight UOM
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.weight_uom}
+                                                        {invoicesData.weight_uom}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -248,7 +330,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Pallet Count
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.pallet_count}
+                                                        {invoicesData.pallet_count}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -280,7 +362,7 @@ const AparInvoiceDetailSummary = () => {
                                                         Reference Number
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.reference_number}
+                                                        {invoicesData.reference_number}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">
@@ -296,7 +378,7 @@ const AparInvoiceDetailSummary = () => {
                                                         AMS
                                                     </label>
                                                     <span className="d-block h6 font-weight-bold">
-                                                        {invoicesData[0]?.ams}
+                                                        {invoicesData.ams}
                                                     </span>
                                                 </div>
                                                 <div className="col-sm-2 mb-4 mt-4">

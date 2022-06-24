@@ -21,9 +21,66 @@ import { invoiceService } from "../../services/InvoiceService";
 
 interface InvoiceListData {
     id: number;
-    invoiceNumber: string;
-    invoiceDate: string;
-    invoiceAmount: string;
+    scac: string;
+    po_number: string;
+    invoice_date: string;
+    invoice_number: string;
+    reference_number: string;
+    invoice_total_amount: string;
+    freight_rate: string;
+    pallet_jack: string;
+    inside_pu: string;
+    lift_gate_pu: string;
+    holiday_pu: string;
+    weekend_pu: string;
+    non_business_hour_pu: string;
+    sorting_segregation: string;
+    marking_tagging: string;
+    other_accessorials: string;
+    residential_pu: string;
+    trade_show_pu: string;
+    appointment_required: string;
+    fuel: string;
+    detention: string;
+    toll_fee: string;
+    layover: string;
+    stop_off: string;
+    driver_assist: string;
+    weight_increase: string;
+    ams: string;
+    bol_fee: string;
+    bonded_fee: string;
+    cancellation_charge: string;
+    chassis_charges: string;
+    congestion_surcharge: string;
+    customs_clearance_fee: string;
+    delivery_order_fee: string;
+    demurrage: string;
+    destination_fees: string;
+    diversion_charges: string;
+    drop_and_hook_fee: string;
+    handling_fee: string;
+    hazardous: string;
+    pick_up_charge: string;
+    redelivery_fee: string;
+    reefer_surcharge: string;
+    terminal_handling_charge: string;
+    wait_time_fee: string;
+    duty_hmf_mpf_fee: string;
+    scale_ticket: string;
+    gri: string;
+    peak_season_surcharge: string;
+    delivery_surcharge: string;
+    invoice_due_date: string;
+    master_bol: string;
+    bol_number: string;
+    container_number: string;
+    awb_number: string;
+    mode: string;
+    weight: string;
+    weight_uom: string;
+    pallet_count: string;
+    l7_details: string;
     createdAt: string;
     updatedAt: string;
 }
@@ -98,13 +155,13 @@ const AparInvoices = () => {
     const invoiceNumberCellRender = ({ data }: any) => {
         return (
             <Fragment>
+                {console.log('data==', data)}
                 {data && (
                     <div>
                         <NavLink
                             className="text-primary mx-2"
-                            to={`/invoice-detail/${data.invoice_number}`}
-                        >
-                            {data.invoiceNumber}
+                            to={`/invoice-detail/${data.id}`}>
+                            {data.invoice_number}
                         </NavLink>
                     </div>
                 )}
@@ -130,17 +187,17 @@ const AparInvoices = () => {
 
     /* table columns field name */
     const columns = [
-        { field: 'SCAC', minWidth: 100, hide: true },
-        { headerName: 'Invoice Number', field: 'invoiceNumber', minWidth: 170, cellRenderer: "invoiceNumberCellRender" },
-        { field: 'Mode', maxWidth: 100, hide: true },
-        { field: 'invoice_date', headerName: 'Invoice Date', minWidth: 140, hide: true },
-        { field: 'invoice_due_date', headerName: 'Invoice Due Date', minWidth: 160, hide: true },
-        { headerName: 'Invoice Total Amount', field: 'invoiceAmount', minWidth: 190 },
+        { headerName: 'SCAC', field: 'scac', minWidth: 100 },
+        { headerName: 'Invoice Number', field: 'invoice_number', minWidth: 100, cellRenderer: "invoiceNumberCellRender" },
+        { headerName: 'Mode', field: 'mode', maxWidth: 100 },
+        { headerName: 'Invoice Date', field: 'invoice_date', minWidth: 140 },
+        { headerName: 'Invoice Due Date', field: 'invoice_due_date', minWidth: 100 },
+        { headerName: 'Invoice Total Amount', field: 'invoice_total_amount', minWidth: 100 },
         { headerName: 'Source', field: 'source', minWidth: 100, hide: true },
         { headerName: 'Status', field: 'status', minWidth: 100, hide: true },
         { headerName: 'File Name', field: 'file_name', minWidth: 150, hide: true },
         { headerName: 'Notes', field: 'notes', minWidth: 130, cellRenderer: "notesCellRender", hide: true },
-        { headerName: 'Ingested Date', field: 'created_at', minWidth: 140, hide: true },
+        { headerName: 'Ingested Date', field: 'createdAt', minWidth: 140 },
     ];
 
     const defaultColDef = useMemo(() => {
