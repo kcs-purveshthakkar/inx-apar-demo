@@ -128,7 +128,6 @@ const AparInvoices = () => {
 
     const getApiData = async () => {
         setShowLoader(true);
-        // const getInvoicesData = await invoiceService.getInvoices();
         if (data) {
             setInvoicesData(data?.invoiceList);
             setInvoicesList(data?.invoiceList);

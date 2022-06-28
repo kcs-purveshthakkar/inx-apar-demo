@@ -111,13 +111,6 @@ const AparInvoiceDetailSummary = () => {
 
     const getApiData = async () => {
         setShowLoader(true);
-        // const getInvoicesData = await invoiceService.getInvoices();
-        // let filterInvoiceById: any[] = [];
-       /*  getInvoicesData.forEach((invoiceData: any) => {
-            if (invoiceData.invoice_number == id) {
-                filterInvoiceById.push(invoiceData);
-            }
-        }); */
         if (data) {
             setInvoicesData(data.invoiceById);
             setShowLoader(false);
