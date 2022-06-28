@@ -154,7 +154,7 @@ const AparInvoiceDetailSummary = () => {
                                                     <label className="d-block font-weight-medium text-labelmuted">
                                                         Batch Name
                                                     </label>
-                                                    <span className="d-block h6 font-weight-bold">
+                                                    <span className="d-block h6 font-weight-bold" style={{ overflowWrap: "break-word" }}>
                                                         {invoicesData.batch_name}
                                                     </span>
                                                 </div>

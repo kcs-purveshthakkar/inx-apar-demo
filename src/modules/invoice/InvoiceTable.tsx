@@ -21,68 +21,48 @@ import { invoiceService } from "../../services/InvoiceService";
 
 interface InvoiceListData {
     id: number;
+    batch_name: string;
+    source: string;
     scac: string;
-    po_number: string;
     invoice_date: string;
     invoice_number: string;
     reference_number: string;
     invoice_total_amount: string;
-    freight_rate: string;
-    pallet_jack: string;
-    inside_pu: string;
-    lift_gate_pu: string;
-    holiday_pu: string;
-    weekend_pu: string;
-    non_business_hour_pu: string;
-    sorting_segregation: string;
-    marking_tagging: string;
-    other_accessorials: string;
-    residential_pu: string;
-    trade_show_pu: string;
-    appointment_required: string;
-    fuel: string;
-    detention: string;
-    toll_fee: string;
-    layover: string;
-    stop_off: string;
-    driver_assist: string;
-    weight_increase: string;
-    ams: string;
-    bol_fee: string;
-    bonded_fee: string;
-    cancellation_charge: string;
-    chassis_charges: string;
-    congestion_surcharge: string;
-    customs_clearance_fee: string;
-    delivery_order_fee: string;
-    demurrage: string;
-    destination_fees: string;
-    diversion_charges: string;
-    drop_and_hook_fee: string;
-    handling_fee: string;
-    hazardous: string;
-    pick_up_charge: string;
-    redelivery_fee: string;
-    reefer_surcharge: string;
-    terminal_handling_charge: string;
-    wait_time_fee: string;
-    duty_hmf_mpf_fee: string;
-    scale_ticket: string;
-    gri: string;
-    peak_season_surcharge: string;
-    delivery_surcharge: string;
-    invoice_due_date: string;
-    master_bol: string;
-    bol_number: string;
-    container_number: string;
-    awb_number: string;
-    mode: string;
     weight: string;
-    weight_uom: string;
     pallet_count: string;
-    l7_details: string;
+    pro_number: string;
+    house_bol: string;
+    linehaul: string;
+    pallet_dimensions: string;
+    prism_id: string;
+    isf_fee: string;
+    origin_charge: string;
+    per_diem_charge: string;
+    pier_pass: string;
+    prepull_fee: string;
+    cfs_storage_fee: string;
+    telex_release_fee: string;
+    yard_storage_fee: string;
+    additional_line_fee: string;
+    lumper: string;
+    limited_access_type: string;
+    nyc_metro: string;
+    large_package_surcharge: string;
+    additional_handling_charge: string;
+    residential_surcharge: string;
+    signature_surcharge: string;
+    correction_surcharge: string;
+    adjustment: string;
+    next_day_surcharge: string;
+    zone_adjustment_charge: string;
+    remote_surcharge: string;
+    return_surcharge: string;
+    second_day_surcharge: string;
+    credits: string;
+    tracking_number: string;
+    class: string;
+    status: string;
     createdAt: string;
-    updatedAt: string;
 }
 
 interface InvoiceListResult {
@@ -179,24 +159,33 @@ const AparInvoices = () => {
         )
     };
 
+    const ingestedDateCellRender = ({ data }: any) => {
+        return (
+            <Fragment>
+                {(new Date(data.createdAt).toLocaleDateString())}
+            </Fragment>
+        )
+    };
+
     const frameworkComponents = {
         invoiceNumberCellRender,
-        notesCellRender
+        notesCellRender,
+        ingestedDateCellRender
     };
 
     /* table columns field name */
     const columns = [
         { headerName: 'SCAC', field: 'scac', minWidth: 100 },
         { headerName: 'Invoice Number', field: 'invoice_number', minWidth: 100, cellRenderer: "invoiceNumberCellRender" },
-        { headerName: 'Mode', field: 'mode', maxWidth: 100 },
+        // { headerName: 'Mode', field: 'mode', maxWidth: 100 },
         { headerName: 'Invoice Date', field: 'invoice_date', minWidth: 140 },
-        { headerName: 'Invoice Due Date', field: 'invoice_due_date', minWidth: 100 },
+        // { headerName: 'Invoice Due Date', field: 'invoice_due_date', minWidth: 100 },
         { headerName: 'Invoice Total Amount', field: 'invoice_total_amount', minWidth: 100 },
         { headerName: 'Source', field: 'source', minWidth: 100, hide: true },
         { headerName: 'Status', field: 'status', minWidth: 100, hide: true },
-        { headerName: 'File Name', field: 'file_name', minWidth: 150, hide: true },
-        { headerName: 'Notes', field: 'notes', minWidth: 130, cellRenderer: "notesCellRender", hide: true },
-        { headerName: 'Ingested Date', field: 'createdAt', minWidth: 140 },
+        // { headerName: 'File Name', field: 'file_name', minWidth: 150, hide: true },
+        // { headerName: 'Notes', field: 'notes', minWidth: 130, cellRenderer: "notesCellRender", hide: true },
+        { headerName: 'Ingested Date', field: 'createdAt', minWidth: 140, cellRenderer: "ingestedDateCellRender" },
     ];
 
     const defaultColDef = useMemo(() => {
